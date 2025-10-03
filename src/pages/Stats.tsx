@@ -3,7 +3,7 @@ import Board from '../assets/images/board.jpg'
 import React from 'react';
 import Typewriter from '@/components/TypeWritter';
 
-const Home: React.FC = () => {
+const Stats: React.FC = () => {
 
     return(
         <div className='px-20 pt-20 pb-5'>
@@ -24,4 +24,4 @@ const Home: React.FC = () => {
     )
 }
 
-export default Home;
+export default Stats;
