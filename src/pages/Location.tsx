@@ -1,15 +1,34 @@
 import Navigation from '@/components/Navigation/Navigation';
 import React from 'react';
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { useGetAllLocation } from '@/hooks/useGetAllLocation';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useGetStats } from '@/hooks/useGetStats';
 import StatCard from '@/components/StatCard';
+import { useDeleteLocation } from '@/hooks/useDeleteLocation';
 
 const Location: React.FC = () => {
     const { data: locations, isLoading: locationLoading, refetch: refetchLocations } = useGetAllLocation();
-    const { data: stats, isLoading: statsLoading } = useGetStats();
+    const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useGetStats();
+    const { mutateAsync: deleteLoc, isPending: deleteLoading } = useDeleteLocation({action() {
+        refetchLocations();
+        refetchStats();
+    },});
+
+    const submitDelete = async (id: number) => {
+        await deleteLoc(id);
+    }
 
     return(
         <div className='px-20 pt-20 pb-5 bg-gray-50 min-h-screen'>
@@ -71,7 +90,33 @@ const Location: React.FC = () => {
                                                     <Link to={`/edit/${location?.numloc}`}>
                                                         <Button size={'icon'}><EditOutlined /></Button>
                                                     </Link>
-                                                    <Button variant={'destructive'} size={'icon'}><DeleteOutlined /></Button>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger asChild>
+                                                            <Button variant={'destructive'} size={'icon'}>
+                                                                { deleteLoading && <LoadingOutlined /> }
+                                                                <DeleteOutlined />
+                                                            </Button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                            Suppression d'une location
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                            Voulez-vous vraiment supprimer la location de {location?.nom_loc} {" "}
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                            <Button
+                                                            variant={"destructive"}
+                                                            onClick={() => submitDelete(location?.numloc)}
+                                                            >
+                                                            Confirmer
+                                                            </Button>
+                                                        </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
                                                 </div>
                                             </td>
                                         </tr>
