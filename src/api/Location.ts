@@ -16,7 +16,7 @@ export const postLocation = async (data: CreateLocation) => {
 }
 
 export const patchLocation = async (data: EditLocation) => {
-    return await axiosInstance.put(`${LOCATION_API_URL}/edit/${data.numloc}`, data);
+    return await axiosInstance.patch(`${LOCATION_API_URL}/edit/${data.numloc}`, data);
 }
 
 export const deleteLocation = async (id: number) => {

@@ -1,7 +1,7 @@
 import Navigation from '@/components/Navigation/Navigation';
 import React from 'react';
 import { useGetAllLocation } from '@/hooks/useGetAllLocation';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useGetStats } from '@/hooks/useGetStats';
@@ -68,7 +68,7 @@ const Location: React.FC = () => {
                                             <td className='p-2 whitespace-nowrap text-sm leading-5 text-gray-900 text-center'> { location?.loyer.toLocaleString('fr-FR') } MGA </td>
                                             <td className='px-1 py-2 whitespace-nowrap text-sm leading-5 text-gray-900'>
                                                 <div className='flex gap-1 justify-end'>
-                                                    <Link to=''>
+                                                    <Link to={`/edit/${location?.numloc}`}>
                                                         <Button size={'icon'}><EditOutlined /></Button>
                                                     </Link>
                                                     <Button variant={'destructive'} size={'icon'}><DeleteOutlined /></Button>

@@ -22,7 +22,7 @@ export const useGetLocationById = (id: number) => {
     }, [error])
 
     return {
-        data: data?.data,
+        data: data?.data[0],
         isLoading,
         refetch
     }
