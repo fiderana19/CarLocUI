@@ -1,5 +1,5 @@
-import Navigation from '@/components/Navigation/Navigation';
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
+const Navigation = lazy(() => import('@/components/Navigation/Navigation'));
 import { useGetStats } from '@/hooks/useGetStats';
 import ReactApexChart from 'react-apexcharts';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -33,7 +33,11 @@ const Stats: React.FC = () => {
 
     return(
         <div className='px-20 pt-20 pb-5'>
-            <Navigation />
+            <Suspense
+                fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+            >
+                <Navigation />
+            </Suspense>
             <div>
                 <div className='text-2xl font-bold my-4'>
                     Diagramme de statistique des locations                    

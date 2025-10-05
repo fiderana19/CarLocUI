@@ -1,5 +1,5 @@
-import Navigation from '@/components/Navigation/Navigation';
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
+const Navigation = lazy(() => import('@/components/Navigation/Navigation'));
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useGetStats } from '@/hooks/useGetStats';
-import StatCard from '@/components/StatCard';
+const StatCard = lazy(() => import('@/components/StatCard'));
 import { useDeleteLocation } from '@/hooks/useDeleteLocation';
 
 const Location: React.FC = () => {
@@ -32,7 +32,11 @@ const Location: React.FC = () => {
 
     return(
         <div className='px-20 pt-20 pb-5 bg-gray-50 min-h-screen'>
-            <Navigation />
+            <Suspense
+                fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+            >
+                <Navigation />
+            </Suspense>
             <div>
                 <div className='flex justify-between items-center my-5'>
                     <div className='text-xl font-bold'>Les locations</div>
@@ -52,9 +56,21 @@ const Location: React.FC = () => {
                         {
                             stats &&
                             <div>
-                                <StatCard title='Somme total' value={stats[0]?.sum} />
-                                <StatCard title='Prix de location maximum' value={stats[0]?.max} />
-                                <StatCard title='Prix de location minimum' value={stats[0]?.min} />
+                                <Suspense
+                                    fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+                                >
+                                    <StatCard title='Somme total' value={stats[0]?.sum} />
+                                </Suspense>
+                                <Suspense
+                                    fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+                                >
+                                    <StatCard title='Prix de location maximum' value={stats[0]?.max} />
+                                </Suspense>
+                                <Suspense
+                                    fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+                                >
+                                    <StatCard title='Prix de location minimum' value={stats[0]?.min} />
+                                </Suspense>
                             </div>
                         }
                     </div>

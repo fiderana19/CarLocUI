@@ -1,6 +1,6 @@
-import Navigation from '@/components/Navigation/Navigation';
 import Board from '../assets/images/board.jpg'
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
+const Navigation = lazy(() => import('@/components/Navigation/Navigation'));
 import { Input } from '@/components/ui/input';
 import { HttpStatus } from '@/constants/Http_status';
 import { useGetAllLocation } from '@/hooks/useGetAllLocation';
@@ -45,7 +45,11 @@ const Edit: React.FC = () => {
 
     return(
         <div className='px-20 pt-20 pb-5 bg-gray-50'>
-            <Navigation />
+            <Suspense
+                fallback={<div className='text-2xl'><LoadingOutlined className='mx-auto' /></div>}
+            >
+                <Navigation />
+            </Suspense>
             <div>
                 <div className='text-3xl font-extrabold mt-5'>
                     Modifier une location de voiture
