@@ -1,23 +1,53 @@
 import Navigation from '@/components/Navigation/Navigation';
-import Board from '../assets/images/board.jpg'
-import React from 'react';
-import Typewriter from '@/components/TypeWritter';
+import React, { useEffect, useState } from 'react';
+import { useGetStats } from '@/hooks/useGetStats';
+import ReactApexChart from 'react-apexcharts';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const Stats: React.FC = () => {
+    const [chartData, setChartData] = useState<{ options: any; series: number[], labels: string[] }>({
+        options: {
+            labels: []
+        },
+        series: [],
+        labels: []
+    })
+    const { data: chart, isLoading: chartLoading } = useGetStats();
+
+    useEffect(() => {
+        if(chart) {
+            const newCharData = {
+                options: {
+                    labels: ['Location total', 'Location minimum', 'Location Maximum'],
+                    colors: ['#37AFE1', '#FF5D6E', '#FFEB55']
+                },
+                series: [chart[0].sum, chart[0].min, chart[0].max],
+                labels: ['Total', 'Minimum', 'Maximum'],
+                colors: ['#37AFE1', '#FF5D6E', '#FFEB55']
+            }
+            setChartData(newCharData);
+
+            console.log(newCharData)
+        }
+    }, [chart])
 
     return(
         <div className='px-20 pt-20 pb-5'>
             <Navigation />
             <div>
-                <div className='text-4xl font-bold mt-10 mb-20'>
-                    <Typewriter text='CARLOC, là où on loue des voitures de luxe.' />
-                    
+                <div className='text-2xl font-bold my-4'>
+                    Diagramme de statistique des locations                    
                 </div>
-                <div className='relative'>
-                    <img src={Board} alt="Home banner" className='h-80 w-full object-cover border-2 border-black rounded' />
-                    <div className='absolute text-right bottom-0 left-0 w-full text-white p-4 bg-gradient-to-t from-black to-transparent font-bold'>
-                        GESTION DES LOCATIONS DE VOITURE 
-                    </div>
+                <div className='w-1/2 mx-auto'>
+                { chartLoading && <LoadingOutlined className='text-3xl' /> }
+                    {
+                        chartData &&
+                        <ReactApexChart
+                            options={chartData.options}
+                            series={chartData.series}
+                            type="pie"
+                        />
+                    }
                 </div>
             </div>
         </div>
